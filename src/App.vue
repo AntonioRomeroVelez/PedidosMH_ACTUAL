@@ -1,10 +1,21 @@
 <template>
   <div id="app">
     <!-- Agregar un enlace de navegación -->
-    <nav>
-      <router-link to="/IndexProductos">Inicio</router-link> |
-      <router-link to="/ProductosList">Mostrar Productos</router-link> |
-      <router-link to="/ProductosAgregados">Productos Agregados</router-link>
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-light mr-auto"
+      style="display: flex; gap: 10px"
+    >
+      <router-link to="/IndexProductos" class="btn btn-primary my-2 my-sm-0"
+        >Inicio</router-link
+      >
+
+      <router-link to="/ProductosList" class="btn btn-success my-2 my-sm-0"
+        >Mostrar Productos</router-link
+      >
+
+      <router-link to="/ProductosAgregados" class="btn btn-warning my-2 my-sm-0"
+        >Productos Agregados</router-link
+      >
     </nav>
 
     <!-- El contenido del componente se inyectará aquí -->

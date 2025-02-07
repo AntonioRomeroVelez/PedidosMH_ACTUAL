@@ -6,16 +6,17 @@
     <div><strong>Principio Activo:</strong> {{ producto.PrincipioActivo }}</div>
     <div>
       <strong>Promoción:</strong>
-      <span v-if="producto.Promocion" class="text-primary"> {{
-        producto.Promocion
-      }}</span>
+      <span v-if="producto.Promocion" class="text-primary">
+        {{ producto.Promocion }}</span
+      >
       <span v-else class="text-warning"> No tiene promoción</span>
     </div>
     <div><strong>Precio Farmacia:</strong> ${{ producto.PrecioFarmacia }}</div>
     <div><strong>PVP:</strong> ${{ producto.PVP }}</div>
     <div><strong>Descuento:</strong> {{ producto.Descuento }}</div>
     <div><strong>Marca:</strong> {{ producto.MARCA }}</div>
-    <div><strong>IVA:</strong>
+    <div>
+      <strong>IVA:</strong>&nbsp;
       <span v-if="producto.IVA == 'SI'">
         <b> &emsp;{{ producto.IVA }}</b> ${{ precioConIVA }}
       </span>
@@ -26,7 +27,9 @@
     <!-- <div><strong>Precio con IVA:</strong> ${{ precioConIVA }}</div> -->
 
     <!-- Entrada para la cantidad -->
-    <div>
+    <div
+      style="display: flex; gap: 5px; justify-content: center; margin: 10px 3px"
+    >
       <strong>Cantidad:</strong>
       <input v-model="cantidad" type="number" min="1" class="cantidad" />
     </div>
@@ -80,9 +83,6 @@ const precioConIVA = computed(() => {
 
 <style scoped>
 /* Estilos opcionales para el componente hijo */
-div {
-  margin-bottom: 10px;
-}
 
 .container {
   border: solid 1px silver;
