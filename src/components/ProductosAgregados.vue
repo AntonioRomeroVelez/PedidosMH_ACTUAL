@@ -1,16 +1,23 @@
 <template>
   <div>
     <h2>Productos Agregados</h2>
-    <!-- Botones para exportar en diferentes formatos -->
-    <button @click="exportarAExcel" class="btn btn-success">
-      Exportar a Excel
-    </button>
-    <button @click="exportarProformaAExcel" class="btn btn-info">
-      Exportar como Proforma
-    </button>
-    <button @click="exportarPedidoAExcel" class="btn btn-primary">
-      Exportar como Pedido
-    </button>
+    <div style="display:flex;margin:15px;gap:10px">
+      <div><label>Institución:</label><input v-model="nombreInstitucion" class="form-control" style="width:250px"></div>
+      <div><label>Vendedor:</label><input v-model="nombreVendedor" class="form-control" style="width:250px"></div>
+      <div><label>Sector:</label><input v-model="nombreSector" class="form-control" style="width:250px"></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <!-- Botones para exportar en diferentes formatos -->
+      <button @click="exportarAExcel" class="btn btn-success">
+        Exportar a Excel
+      </button>
+      <button @click="exportarProformaAExcel" class="btn btn-info">
+        Exportar como Proforma
+      </button>
+      <button @click="exportarPedidoAExcel" class="btn btn-primary">
+        Exportar como Pedido
+      </button>
+    </div>
 
     <!-- Mostrar mensaje si no hay productos en el carrito -->
     <div v-if="productosAgregados.length === 0">
@@ -26,22 +33,18 @@
           <th>Nombre</th>
           <th>Principio Activo</th>
           <th>Presentación</th>
-          <th>Precio Farmacia</th>
-          <th>Marca</th>
+          <th>PVP/Farmacia</th>
+          <th>MARCA</th>
+          <th>Descuento</th>
           <th>PVP</th>
           <th>Promoción</th>
-          <th>Precio Unitario</th>
-          <th>Total</th>
         </tr>
       </thead>
       <tbody>
         <!-- Iteración a través de los productosAgregados -->
         <tr v-for="producto in productosAgregados" :key="producto.ID">
           <td>
-            <button
-              @click="eliminarProducto(producto.ID)"
-              class="btn btn-danger"
-            >
+            <button @click="eliminarProducto(producto.ID)" class="btn btn-danger">
               Eliminar
             </button>
           </td>
@@ -50,25 +53,12 @@
           <td>{{ producto.PrincipioActivo }}</td>
           <td>{{ producto.Presentacion }}</td>
           <td>${{ producto.PrecioFarmacia.toFixed(2) }}</td>
-          <td>{{ producto.Marca }}</td>
+          <td>{{ producto.MARCA }}</td>
+          <td>{{ producto.Descuento }}</td>
           <td>{{ producto.PVP || "N/A" }}</td>
           <td>{{ producto.Promocion || "N/A" }}</td>
-          <td>
-            ${{
-              (
-                producto.PrecioFarmacia * (producto.IVA === "SI" ? 1.15 : 1)
-              ).toFixed(2)
-            }}
-          </td>
-          <td>
-            ${{
-              (
-                producto.PrecioFarmacia *
-                producto.cantidad *
-                (producto.IVA === "SI" ? 1.15 : 1)
-              ).toFixed(2)
-            }}
-          </td>
+
+
         </tr>
       </tbody>
     </table>
@@ -79,6 +69,10 @@
 // Importar las librerías necesarias
 import { ref, onMounted } from "vue";
 import ExcelJS from "exceljs";
+
+const nombreInstitucion = ref('')
+const nombreVendedor = ref('')
+const nombreSector = ref('')
 
 // Declarar las referencias
 const productosAgregados = ref([]);
@@ -121,8 +115,6 @@ const exportarAExcel = async () => {
       { header: "Precio Farmacia", key: "precioFarmacia" },
       { header: "PVP", key: "pvp" },
       { header: "Promoción", key: "promocion" },
-      { header: "Precio Unitario", key: "precioUnitario" },
-      { header: "Total", key: "total" },
     ];
 
     // Llenar los datos de la tabla
@@ -134,16 +126,8 @@ const exportarAExcel = async () => {
         principioActivo: producto.PrincipioActivo,
         presentacion: producto.Presentacion,
         precioFarmacia: producto.PrecioFarmacia.toFixed(2),
-        pvp: producto.PVP || "N/A",
-        promocion: producto.Promocion || "N/A",
-        precioUnitario: (
-          producto.PrecioFarmacia * (producto.IVA === "SI" ? 1.15 : 1)
-        ).toFixed(2),
-        total: (
-          producto.PrecioFarmacia *
-          producto.cantidad *
-          (producto.IVA === "SI" ? 1.15 : 1)
-        ).toFixed(2),
+        pvp: producto.PVP || "",
+        promocion: producto.Promocion || "",
       });
     });
 
@@ -203,71 +187,85 @@ const exportarAExcel = async () => {
     link.href = URL.createObjectURL(blob);
     link.download = "productos.xlsx";
     link.click();
+
+    localStorage.removeItem("productosAgregados"); /// BORRAR EL LOCAL STORAGE
+
   } catch (error) {
     console.error("Error al exportar a Excel:", error);
   }
 };
 
+
+
+
+
+
+
 // Función para exportar como Proforma
+
+
 const exportarProformaAExcel = async () => {
   try {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Proforma");
 
-    // Definir los encabezados de la proforma
-    worksheet.columns = [
-      { header: "Nombre", key: "nombre" },
-      { header: "Precio Farmacia", key: "precioFarmacia" },
-      { header: "Promoción", key: "promocion" },
-      { header: "Marca", key: "marca" },
-      { header: "Presentación", key: "presentacion" },
-    ];
+    // Agregar filas con la información de institución, vendedor y sector
+    worksheet.addRow(["Institución:", nombreInstitucion.value]);
+    worksheet.addRow(["Vendedor:", nombreVendedor.value]);
+    worksheet.addRow(["Sector:", nombreSector.value]);
+    worksheet.addRow([]); // Fila vacía para separar la información de la tabla
 
-    // Llenar los datos de la proforma
-    productosAgregados.value.forEach((producto) => {
-      worksheet.addRow({
-        nombre: producto.NombreProducto,
-        precioFarmacia: producto.PrecioFarmacia.toFixed(2),
-        promocion: producto.Promocion || "N/A",
-        marca: producto.Marca || "N/A", // Asumí que tienes la propiedad "Marca"
-        presentacion: producto.Presentacion,
-      });
-    });
+    // Agregar encabezados en la fila 5
+    const headerRow = worksheet.addRow([
+      "Nombre",
+      "Precio Farmacia",
+      "Promoción",
+      "MARCA",
+      "Presentación",
+    ]);
 
-    // Ajustar el tamaño de las celdas
-    worksheet.getColumn(1).width = 30;
-    worksheet.getColumn(2).width = 15;
-    worksheet.getColumn(3).width = 20;
-    worksheet.getColumn(4).width = 20;
-    worksheet.getColumn(5).width = 20;
-
-    // Establecer estilo (alineación y ajuste de texto)
-    worksheet.eachRow({ includeEmpty: true }, (row) => {
-      row.alignment = {
-        vertical: "middle",
-        horizontal: "center",
-        wrapText: true,
+    // Aplicar estilos a los encabezados
+    headerRow.eachCell((cell) => {
+      cell.font = { bold: true, color: { argb: "FFFFFF" } }; // Texto blanco
+      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "4F81BD" }, // Azul
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
       };
     });
-    // Ajustar el contenido de las celdas para que se adapte a la celda y habilitar el ajuste de texto
-    worksheet.eachRow((row, rowNumber) => {
-      row.eachCell((cell, colNumber) => {
-        // Alineación del texto
-        if (colNumber === 1) {
-          cell.alignment = {
-            vertical: "middle",
-            horizontal: "center",
-            wrapText: true,
-          }; // Para el primer campo
-        } else {
-          cell.alignment = {
-            vertical: "middle",
-            horizontal: "left",
-            wrapText: true,
-          }; // Para el resto de las celdas
-        }
 
-        // Establecer bordes para las celdas
+    // Ajustar el ancho de las columnas
+    worksheet.columns = [
+      { key: "nombre", width: 30 },
+      { key: "precioFarmacia", width: 15 },
+      { key: "promocion", width: 20 },
+      { key: "MARCA", width: 20 },
+      { key: "presentacion", width: 20 },
+    ];
+
+    // Llenar los datos a partir de la fila 6
+    productosAgregados.value.forEach((producto) => {
+      const row = worksheet.addRow({
+        nombre: producto.NombreProducto,
+        precioFarmacia: producto.PrecioFarmacia.toFixed(2),
+        promocion: producto.Promocion || "",
+        MARCA: producto.MARCA || "___",
+        presentacion: producto.Presentacion,
+      });
+
+      // Ajustar la altura de la fila dinámicamente
+      row.height = undefined;
+
+      // Aplicar bordes y alineación con wrap text
+      row.eachCell((cell) => {
+        cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -282,85 +280,188 @@ const exportarProformaAExcel = async () => {
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "proforma.xlsx";
+    link.download = `Proforma_${nombreInstitucion.value}.xlsx`;
     link.click();
+    localStorage.removeItem("productosAgregados"); /// BORRAR EL LOCAL STORAGE
+
   } catch (error) {
     console.error("Error al exportar como Proforma:", error);
   }
 };
 
-// // Función para exportar como Pedido
-// const exportarPedidoAExcel = async () => {
-//   // Aquí puedes usar la misma función exportarAExcel si deseas incluir todos los datos
-//   await exportarAExcel();
-// };
+
+
+
+
+
 
 // Función para exportar como Proforma
+// const exportarPedidoAExcel = async () => {
+//   try {
+//     const workbook = new ExcelJS.Workbook();
+//     const worksheet = workbook.addWorksheet("Pedido");
+
+//     // Agregar información general
+//     worksheet.addRow(["Institución:", nombreInstitucion.value]);
+//     worksheet.addRow(["Vendedor:", nombreVendedor.value]);
+//     worksheet.addRow(["Sector:", nombreSector.value]);
+//     worksheet.addRow([]); // Fila vacía para separar la información
+
+//     // Definir los encabezados en la fila 5
+//     const headerRow = worksheet.addRow([
+//       "Nombre",
+//       "Precio Farmacia",
+//       "Promoción",
+//       "MARCA",
+//       "Presentación",
+//       "Lote",
+//       "Fecha de vencimiento",
+//     ]);
+
+//     // Aplicar estilos a los encabezados
+//     headerRow.eachCell((cell) => {
+//       cell.font = { bold: true };
+//       cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+//       cell.border = {
+//         top: { style: "thin" },
+//         left: { style: "thin" },
+//         bottom: { style: "thin" },
+//         right: { style: "thin" },
+//       };
+//       cell.fill = {
+//         type: "pattern",
+//         pattern: "solid",
+//         fgColor: { argb: "FFFFE699" }, // Color amarillo claro
+//       };
+//     });
+
+//     // Ajustar el ancho de las columnas
+//     worksheet.columns = [
+//       { key: "nombre", width: 30 },
+//       { key: "precioFarmacia", width: 15 },
+//       { key: "promocion", width: 20 },
+//       { key: "MARCA", width: 20 },
+//       { key: "presentacion", width: 20 },
+//       { key: "lote", width: 20 },
+//       { key: "fecha_de_vencimiento", width: 20 },
+//     ];
+
+//     // Llenar los datos a partir de la fila 6
+//     productosAgregados.value.forEach((producto) => {
+//       const row = worksheet.addRow({
+//         nombre: producto.NombreProducto,
+//         precioFarmacia: producto.PrecioFarmacia.toFixed(2),
+//         promocion: producto.Promocion || "",
+//         MARCA: producto.MARCA || "___",
+//         presentacion: producto.Presentacion,
+//         lote: "",  // Campo vacío pero con borde
+//         fecha_de_vencimiento: "",  // Campo vacío pero con borde
+//       });
+
+//       // Aplicar bordes a cada celda de la fila
+//       row.eachCell((cell) => {
+//         cell.border = {
+//           top: { style: "thin" },
+//           left: { style: "thin" },
+//           bottom: { style: "thin" },
+//           right: { style: "thin" },
+//         };
+//       });
+//     });
+
+//     // Ajustar alineación de todas las celdas después de llenar los datos
+//     worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+//       if (rowNumber > 4) { // Desde los encabezados en adelante
+//         row.eachCell((cell) => {
+//           cell.alignment = {
+//             vertical: "middle",
+//             horizontal: "left",
+//             wrapText: true,
+//           };
+//         });
+//       }
+//     });
+
+//     // Generar archivo Excel
+//     const buffer = await workbook.xlsx.writeBuffer();
+//     const blob = new Blob([buffer], { type: "application/octet-stream" });
+//     const link = document.createElement("a");
+//     link.href = URL.createObjectURL(blob);
+//     link.download = `Pedido_${nombreInstitucion.value}.xlsx`;
+//     link.click();
+//   } catch (error) {
+//     console.error("Error al exportar como Proforma:", error);
+//   }
+// };
+
 const exportarPedidoAExcel = async () => {
   try {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Proforma");
+    const worksheet = workbook.addWorksheet("Pedido");
 
-    // Definir los encabezados de la proforma
-    worksheet.columns = [
-      { header: "Nombre", key: "nombre" },
-      { header: "Precio Farmacia", key: "precioFarmacia" },
-      { header: "Promoción", key: "promocion" },
-      { header: "Marca", key: "marca" },
-      { header: "Presentación", key: "presentacion" },
-      { header: "Lote", key: "lote" },
-      { header: "Fecha Vencimiento", key: "fvencimiento" },
-    ];
+    // Agregar información general
+    worksheet.addRow(["Institución:", nombreInstitucion.value]);
+    worksheet.addRow(["Vendedor:", nombreVendedor.value]);
+    worksheet.addRow(["Sector:", nombreSector.value]);
+    worksheet.addRow([]); // Fila vacía para separar la información
 
-    // Llenar los datos de la proforma
-    productosAgregados.value.forEach((producto) => {
-      worksheet.addRow({
-        nombre: producto.NombreProducto,
-        precioFarmacia: producto.PrecioFarmacia.toFixed(2),
-        promocion: producto.Promocion || "N/A",
-        marca: producto.Marca || "N/A", // Asumí que tienes la propiedad "Marca"
-        presentacion: producto.Presentacion,
-        lote: "",
-        fvencimiento: "",
-      });
-    });
+    // Definir los encabezados en la fila 5
+    const headerRow = worksheet.addRow([
+      "Nombre",
+      "Precio Farmacia",
+      "Promoción",
+      "MARCA",
+      "Presentación",
+      "Lote",
+      "Fecha de vencimiento",
+    ]);
 
-    // Ajustar el tamaño de las celdas
-    worksheet.getColumn(1).width = 30;
-    worksheet.getColumn(2).width = 15;
-    worksheet.getColumn(3).width = 20;
-    worksheet.getColumn(4).width = 20;
-    worksheet.getColumn(5).width = 20;
-    worksheet.getColumn(6).width = 20;
-    worksheet.getColumn(7).width = 20;
-
-    // Establecer estilo (alineación y ajuste de texto)
-    worksheet.eachRow({ includeEmpty: true }, (row) => {
-      row.alignment = {
-        vertical: "middle",
-        horizontal: "center",
-        wrapText: true,
+    // Aplicar estilos a los encabezados
+    headerRow.eachCell((cell) => {
+      cell.font = { bold: true, color: { argb: "000000" } }; // Texto negro
+      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFFFE699" }, // Color amarillo claro
+      };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
       };
     });
-    // Ajustar el contenido de las celdas para que se adapte a la celda y habilitar el ajuste de texto
-    worksheet.eachRow((row, rowNumber) => {
-      row.eachCell((cell, colNumber) => {
-        // Alineación del texto
-        if (colNumber === 1) {
-          cell.alignment = {
-            vertical: "middle",
-            horizontal: "center",
-            wrapText: true,
-          }; // Para el primer campo
-        } else {
-          cell.alignment = {
-            vertical: "middle",
-            horizontal: "left",
-            wrapText: true,
-          }; // Para el resto de las celdas
-        }
 
-        // Establecer bordes para las celdas
+    // Ajustar el ancho de las columnas
+    worksheet.columns = [
+      { key: "nombre", width: 30 },
+      { key: "precioFarmacia", width: 15 },
+      { key: "promocion", width: 20 },
+      { key: "MARCA", width: 20 },
+      { key: "presentacion", width: 20 },
+      { key: "lote", width: 20 },
+      { key: "fecha_de_vencimiento", width: 20 },
+    ];
+
+    // Llenar los datos a partir de la fila 6
+    productosAgregados.value.forEach((producto) => {
+      const row = worksheet.addRow({
+        nombre: producto.NombreProducto,
+        precioFarmacia: producto.PrecioFarmacia.toFixed(2),
+        promocion: producto.Promocion || "",
+        MARCA: producto.MARCA || "___",
+        presentacion: producto.Presentacion,
+        lote: "",  // Campo vacío pero con borde
+        fecha_de_vencimiento: "",  // Campo vacío pero con borde
+      });
+
+      // Permitir que Excel ajuste automáticamente la altura de la fila
+      row.height = undefined;
+
+      // Aplicar estilos a cada celda de la fila
+      row.eachCell((cell) => {
+        cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -375,10 +476,16 @@ const exportarPedidoAExcel = async () => {
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "proforma.xlsx";
+    link.download = `Pedido_${nombreInstitucion.value}.xlsx`;
     link.click();
+    localStorage.removeItem("productosAgregados"); /// BORRAR EL LOCAL STORAGE
+
   } catch (error) {
-    console.error("Error al exportar como Proforma:", error);
+    console.error("Error al exportar el pedido:", error);
   }
 };
+
+
+
+
 </script>

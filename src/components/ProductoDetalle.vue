@@ -6,16 +6,24 @@
     <div><strong>Principio Activo:</strong> {{ producto.PrincipioActivo }}</div>
     <div>
       <strong>Promoción:</strong>
-      <span v-if="producto.Promocion" class="text-primary">{{
+      <span v-if="producto.Promocion" class="text-primary"> {{
         producto.Promocion
       }}</span>
       <span v-else class="text-warning"> No tiene promoción</span>
     </div>
     <div><strong>Precio Farmacia:</strong> ${{ producto.PrecioFarmacia }}</div>
     <div><strong>PVP:</strong> ${{ producto.PVP }}</div>
-    <div><strong>Marca:</strong> {{ producto.Marca }}</div>
-    <div><strong>IVA:</strong> {{ producto.IVA }}</div>
-    <div><strong>Precio con IVA:</strong> ${{ precioConIVA }}</div>
+    <div><strong>Descuento:</strong> {{ producto.Descuento }}</div>
+    <div><strong>Marca:</strong> {{ producto.MARCA }}</div>
+    <div><strong>IVA:</strong>
+      <span v-if="producto.IVA == 'SI'">
+        <b> &emsp;{{ producto.IVA }}</b> ${{ precioConIVA }}
+      </span>
+      <span v-else>
+        {{ producto.IVA }}
+      </span>
+    </div>
+    <!-- <div><strong>Precio con IVA:</strong> ${{ precioConIVA }}</div> -->
 
     <!-- Entrada para la cantidad -->
     <div>
@@ -75,6 +83,7 @@ const precioConIVA = computed(() => {
 div {
   margin-bottom: 10px;
 }
+
 .container {
   border: solid 1px silver;
   display: inline-table;
@@ -83,6 +92,7 @@ div {
   padding: 5px;
   border-radius: 5px;
 }
+
 .cantidad {
   border: solid 1px silver;
   width: 80px;

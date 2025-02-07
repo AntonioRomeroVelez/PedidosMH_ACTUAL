@@ -7,7 +7,8 @@
     "PrecioFarmacia": 2.5,
     "PVP": 3,
     "Promocion": "6+1 10+2",
-    "Marca": "ADISA",
+     "Descuento": "4% DSCTO A PARTIR DE 2 CAJAS",
+     "Marca": "ADISA",
     "IVA": "SI"
   },
   {
@@ -18,7 +19,8 @@
     "PrecioFarmacia": 10,
     "PVP": 12,
     "Promocion": "6+1 10+2",
-    "Marca": "ADISA",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "ADISA",
     "IVA": "SI"
   },
 
@@ -30,7 +32,8 @@
     "PrecioFarmacia": 0.96,
     "PVP": 1.38,
     "Promocion": "6+1 10+2",
-    "Marca": "HEALVAN",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "HEALVAN",
     "IVA": "NO"
   },
   {
@@ -41,7 +44,8 @@
     "PrecioFarmacia": 0.925,
     "PVP": 1.32,
     "Promocion": "12+1",
-    "Marca": "BRAUN",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "BRAUN",
     "IVA": "NO"
   },
   {
@@ -52,7 +56,8 @@
     "PrecioFarmacia": 1.5,
     "PVP": 2.15,
     "Promocion": "12+1",
-    "Marca": "BRAUN",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "BRAUN",
     "IVA": "NO"
   },
   {
@@ -63,7 +68,8 @@
     "PrecioFarmacia": 0.6,
     "PVP": 0.86,
     "Promocion": "6+1  10+2  50+12  100+30",
-    "Marca": "BRAUN",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "BRAUN",
     "IVA": "NO"
   },
   {
@@ -74,8 +80,8 @@
     "PrecioFarmacia": 2.2,
     "PVP": 3.16,
     "Promocion": "12+1",
-    "Descuento": "4% DSCTO + DE 2 UNID",
-    "Marca": "BRAUN",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "BRAUN",
     "IVA": "NO"
   },
   {
@@ -86,7 +92,8 @@
     "PrecioFarmacia": 0.6,
     "PVP": 0.86,
     "Promocion": "6+1  10+2  50+12  100+30",
-    "Marca": "PLUSCLIP ALPHA",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "PLUSCLIP ALPHA",
     "IVA": "NO"
   },
 
@@ -98,7 +105,8 @@
     "PrecioFarmacia": 0.4,
     "PVP": 0.57,
     "Promocion": "6+1  10+2  50+12  100+30",
-    "Marca": "HEILER",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "HEILER",
     "IVA": "NO"
   },
   {
@@ -109,7 +117,8 @@
     "PrecioFarmacia": 0.275,
     "PVP": 0.39,
     "Promocion": "6+1  10+2  50+12  100+30",
-    "Marca": "CIENVEC",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "CIENVEC",
     "IVA": "NO"
   },
   {
@@ -120,8 +129,8 @@
     "PrecioFarmacia": 23.4,
     "PVP": 33.63,
     "Promocion": "12+1",
-    "Descuento": "4% DSCTO + DE 2 UNID",
-    "Marca": "MEDLINE",
+     "Descuento": "4% DSCTO + DE 2 UNID",
+     "Marca": "MEDLINE",
     "IVA": "NO"
   }
 ]

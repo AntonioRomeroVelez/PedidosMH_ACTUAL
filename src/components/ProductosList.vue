@@ -4,12 +4,7 @@
 
     <!-- Input para buscar productos por nombre -->
     <div>
-      <input
-        v-model="searchTerm"
-        type="text"
-        placeholder="Buscar producto..."
-        class="search-input"
-      />
+      <input v-model="searchTerm" type="text" placeholder="Buscar producto..." class="search-input" />
     </div>
 
     <!-- Verificar si hay productos disponibles para mostrar -->
@@ -18,12 +13,8 @@
     </div>
 
     <!-- Mostrar productos con el componente hijo ProductoDetalle -->
-    <ProductoDetalle
-      v-for="producto in filteredProductos"
-      :key="producto.ID"
-      :producto="producto"
-      @agregarProductoHijo="agregarProductoPadre"
-    />
+    <ProductoDetalle v-for="producto in filteredProductos" :key="producto.ID" :producto="producto"
+      @agregarProductoHijo="agregarProductoPadre" />
   </div>
 </template>
 
@@ -39,24 +30,19 @@ const searchTerm = ref(""); // Término de búsqueda
 // Cargar productos desde el archivo JSON
 onMounted(async () => {
   try {
-    const response = await fetch("/productos.json");
-    if (response.ok) {
-      const data = await response.json();
-      productos.value = data;
-    } else {
-      console.error("Error al cargar los productos");
-    }
-    // Cargar los productos agregados desde localStorage al montar el componente
-    const datosGuardados = JSON.parse(
-      localStorage.getItem("productosAgregados")
-    );
-    if (datosGuardados) {
-      productosAgregados.value = datosGuardados; // Asignar los datos al array reactivo
-    }
+    const response = await fetch("/listaGeneral.json"); // Quita "/public/"
+    if (!response.ok) throw new Error("Error al cargar los productos");
+
+    productos.value = await response.json();
+
+    // Recuperar productos del LocalStorage
+    const datosGuardados = JSON.parse(localStorage.getItem("productosAgregados")) || [];
+    productosAgregados.value = datosGuardados; // Evita null
   } catch (error) {
     console.error("Hubo un problema al cargar el JSON:", error);
   }
 });
+
 
 // Definir una propiedad para guardar los datos de producto y cantidad
 const productoEnCarrito = ref(null);
