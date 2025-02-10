@@ -1,20 +1,44 @@
 <template>
   <div>
     <h2>Productos Agregados</h2>
-    <div style="display:flex;margin:15px;gap:10px">
-      <div><label>Institución:</label><input v-model="nombreInstitucion" class="form-control" style="width:250px"></div>
-      <div><label>Vendedor:</label><input v-model="nombreVendedor" class="form-control" style="width:250px"></div>
-      <div><label>Sector:</label><input v-model="nombreSector" class="form-control" style="width:250px"></div>
+    <div style="display: flex; margin: 15px; gap: 10px; flex-wrap: wrap">
+      <div>
+        <label>Institución: </label><br />
+        <input
+          v-model="nombreInstitucion"
+          class="input is-primary"
+          style="width: 200px"
+        />
+      </div>
+      <div>
+        <label>Vendedor: </label><br />
+        <input
+          v-model="nombreVendedor"
+          class="input is-primary"
+          style="width: 200px"
+        />
+      </div>
+      <div>
+        <label>Sector: </label><br />
+        <input
+          v-model="nombreSector"
+          class="input is-primary"
+          style="width: 200px"
+        />
+      </div>
     </div>
-    <div style="display:flex;gap:10px">
+    <div style="display: flex; gap: 10px">
       <!-- Botones para exportar en diferentes formatos -->
-      <button @click="exportarAExcel" class="btn btn-success">
+      <button @click="exportarAExcel" class="button is-info is-light">
         Exportar a Excel
       </button>
-      <button @click="exportarProformaAExcel" class="btn btn-info">
+      <button
+        @click="exportarProformaAExcel"
+        class="button is-warning is-light"
+      >
         Exportar como Proforma
       </button>
-      <button @click="exportarPedidoAExcel" class="btn btn-primary">
+      <button @click="exportarPedidoAExcel" class="button is-success is-light">
         Exportar como Pedido
       </button>
     </div>
@@ -25,40 +49,50 @@
     </div>
 
     <!-- Mostrar la tabla con los productos agregados -->
-    <table class="table table-striped" v-else ref="productosTable">
+    <table
+      v-else
+      ref="productosTable"
+      class="table table-striped-columns is-fullwidth"
+    >
       <thead>
         <tr>
-          <th>Acción</th>
-          <th>Cantidad</th>
-          <th>Nombre</th>
-          <th>Principio Activo</th>
-          <th>Presentación</th>
-          <th>PVP/Farmacia</th>
-          <th>MARCA</th>
-          <th>Descuento</th>
-          <th>PVP</th>
-          <th>Promoción</th>
+          <th style="font-size: 10px">Acción</th>
+          <th style="font-size: 10px">Cantidad</th>
+          <th style="font-size: 10px">Nombre</th>
+          <th style="font-size: 10px">
+            Principio <br />
+            Activo
+          </th>
+          <th style="font-size: 10px">Presentación</th>
+          <th style="font-size: 10px">PVP <br />Farmacia</th>
+          <th style="font-size: 10px">MARCA</th>
+          <th style="font-size: 10px">Descuento</th>
+          <th style="font-size: 10px">PVP</th>
+          <th style="font-size: 10px">Promoción</th>
         </tr>
       </thead>
       <tbody>
         <!-- Iteración a través de los productosAgregados -->
         <tr v-for="producto in productosAgregados" :key="producto.ID">
           <td>
-            <button @click="eliminarProducto(producto.ID)" class="btn btn-danger">
-              Eliminar
+            <button
+              @click="eliminarProducto(producto.ID)"
+              class="button is-danger"
+            >
+              X
             </button>
           </td>
-          <td>{{ producto.cantidad }}</td>
-          <td>{{ producto.NombreProducto }}</td>
-          <td>{{ producto.PrincipioActivo }}</td>
-          <td>{{ producto.Presentacion }}</td>
-          <td>${{ producto.PrecioFarmacia.toFixed(2) }}</td>
-          <td>{{ producto.MARCA }}</td>
-          <td>{{ producto.Descuento }}</td>
-          <td>{{ producto.PVP || "N/A" }}</td>
-          <td>{{ producto.Promocion || "N/A" }}</td>
-
-
+          <td style="font-size: 12px">{{ producto.cantidad }}</td>
+          <td style="font-size: 12px">{{ producto.NombreProducto }}</td>
+          <td style="font-size: 12px">{{ producto.PrincipioActivo }}</td>
+          <td style="font-size: 12px">{{ producto.Presentacion }}</td>
+          <td style="font-size: 12px">
+            ${{ producto.PrecioFarmacia.toFixed(2) }}
+          </td>
+          <td style="font-size: 12px">{{ producto.MARCA }}</td>
+          <td style="font-size: 12px">{{ producto.Descuento }}</td>
+          <td style="font-size: 12px">{{ producto.PVP || "N/A" }}</td>
+          <td style="font-size: 12px">{{ producto.Promocion || "N/A" }}</td>
         </tr>
       </tbody>
     </table>
@@ -70,9 +104,9 @@
 import { ref, onMounted } from "vue";
 import ExcelJS from "exceljs";
 
-const nombreInstitucion = ref('')
-const nombreVendedor = ref('')
-const nombreSector = ref('')
+const nombreInstitucion = ref("");
+const nombreVendedor = ref("");
+const nombreSector = ref("");
 
 // Declarar las referencias
 const productosAgregados = ref([]);
@@ -189,20 +223,12 @@ const exportarAExcel = async () => {
     link.click();
 
     localStorage.removeItem("productosAgregados"); /// BORRAR EL LOCAL STORAGE
-
   } catch (error) {
     console.error("Error al exportar a Excel:", error);
   }
 };
 
-
-
-
-
-
-
 // Función para exportar como Proforma
-
 
 const exportarProformaAExcel = async () => {
   try {
@@ -227,7 +253,11 @@ const exportarProformaAExcel = async () => {
     // Aplicar estilos a los encabezados
     headerRow.eachCell((cell) => {
       cell.font = { bold: true, color: { argb: "FFFFFF" } }; // Texto blanco
-      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+      cell.alignment = {
+        vertical: "middle",
+        horizontal: "center",
+        wrapText: true,
+      };
       cell.fill = {
         type: "pattern",
         pattern: "solid",
@@ -265,7 +295,11 @@ const exportarProformaAExcel = async () => {
 
       // Aplicar bordes y alineación con wrap text
       row.eachCell((cell) => {
-        cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: "left",
+          wrapText: true,
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -283,17 +317,10 @@ const exportarProformaAExcel = async () => {
     link.download = `Proforma_${nombreInstitucion.value}.xlsx`;
     link.click();
     localStorage.removeItem("productosAgregados"); /// BORRAR EL LOCAL STORAGE
-
   } catch (error) {
     console.error("Error al exportar como Proforma:", error);
   }
 };
-
-
-
-
-
-
 
 // Función para exportar como Proforma
 // const exportarPedidoAExcel = async () => {
@@ -419,7 +446,11 @@ const exportarPedidoAExcel = async () => {
     // Aplicar estilos a los encabezados
     headerRow.eachCell((cell) => {
       cell.font = { bold: true, color: { argb: "000000" } }; // Texto negro
-      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+      cell.alignment = {
+        vertical: "middle",
+        horizontal: "center",
+        wrapText: true,
+      };
       cell.fill = {
         type: "pattern",
         pattern: "solid",
@@ -452,8 +483,8 @@ const exportarPedidoAExcel = async () => {
         promocion: producto.Promocion || "",
         MARCA: producto.MARCA || "___",
         presentacion: producto.Presentacion,
-        lote: "",  // Campo vacío pero con borde
-        fecha_de_vencimiento: "",  // Campo vacío pero con borde
+        lote: "", // Campo vacío pero con borde
+        fecha_de_vencimiento: "", // Campo vacío pero con borde
       });
 
       // Permitir que Excel ajuste automáticamente la altura de la fila
@@ -461,7 +492,11 @@ const exportarPedidoAExcel = async () => {
 
       // Aplicar estilos a cada celda de la fila
       row.eachCell((cell) => {
-        cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true };
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: "left",
+          wrapText: true,
+        };
         cell.border = {
           top: { style: "thin" },
           left: { style: "thin" },
@@ -479,13 +514,8 @@ const exportarPedidoAExcel = async () => {
     link.download = `Pedido_${nombreInstitucion.value}.xlsx`;
     link.click();
     localStorage.removeItem("productosAgregados"); /// BORRAR EL LOCAL STORAGE
-
   } catch (error) {
     console.error("Error al exportar el pedido:", error);
   }
 };
-
-
-
-
 </script>

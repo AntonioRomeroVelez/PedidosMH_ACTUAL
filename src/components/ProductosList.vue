@@ -1,10 +1,15 @@
 <template>
-  <div>
+  <div class="contiainer is-fullwidth">
     <h1>Lista de Productos</h1>
 
     <!-- Input para buscar productos por nombre -->
     <div>
-      <input v-model="searchTerm" type="text" placeholder="Buscar producto..." class="search-input" />
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Buscar producto..."
+        class="input is-primary"
+      />
     </div>
 
     <!-- Verificar si hay productos disponibles para mostrar -->
@@ -12,15 +17,19 @@
       <p>No se encontraron productos.</p>
     </div>
 
-    <!-- Mostrar productos con el componente hijo ProductoDetalle -->
-    <ProductoDetalle v-for="producto in filteredProductos" :key="producto.ID" :producto="producto"
-      @agregarProductoHijo="agregarProductoPadre" />
+    <!-- Mostrar productos con el componente hijo ProductoNombres -->
+    <ProductoNombres
+      v-for="producto in filteredProductos"
+      :key="producto.ID"
+      :producto="producto"
+      @agregarProductoHijo="agregarProductoPadre"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import ProductoDetalle from "./ProductoDetalle.vue";
+import ProductoNombres from "./ProductoNombres.vue";
 import { useRouter } from "vue-router"; // Para navegación
 
 const productos = ref([]);
@@ -36,13 +45,13 @@ onMounted(async () => {
     productos.value = await response.json();
 
     // Recuperar productos del LocalStorage
-    const datosGuardados = JSON.parse(localStorage.getItem("productosAgregados")) || [];
+    const datosGuardados =
+      JSON.parse(localStorage.getItem("productosAgregados")) || [];
     productosAgregados.value = datosGuardados; // Evita null
   } catch (error) {
     console.error("Hubo un problema al cargar el JSON:", error);
   }
 });
-
 
 // Definir una propiedad para guardar los datos de producto y cantidad
 const productoEnCarrito = ref(null);

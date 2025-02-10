@@ -1,25 +1,28 @@
 <template>
-  <div id="app">
+  <div id="app" class="container is-fullwidth">
     <!-- Agregar un enlace de navegación -->
+
     <nav
-      class="navbar navbar-expand-lg navbar-light bg-light mr-auto"
-      style="display: flex; gap: 10px"
+      class="navbar is-fixed-top"
+      role="navigation"
+      aria-label="main navigation"
     >
-      <router-link to="/IndexProductos" class="btn btn-primary my-2 my-sm-0"
-        >Inicio</router-link
-      >
+      <div class="container">
+        <router-link to="/ProductosList" class="button is-info mr-5">
+          Mostrar Productos
+        </router-link>
 
-      <router-link to="/ProductosList" class="btn btn-success my-2 my-sm-0"
-        >Mostrar Productos</router-link
-      >
-
-      <router-link to="/ProductosAgregados" class="btn btn-warning my-2 my-sm-0"
-        >Productos Agregados</router-link
-      >
+        <router-link to="/ProductosAgregados" class="button is-warning mr-5">
+          Mostrar Pedido
+        </router-link>
+      </div>
     </nav>
-
-    <!-- El contenido del componente se inyectará aquí -->
-    <router-view></router-view>
+    <section class="section">
+      <div class="container">
+        <!-- El contenido del componente se inyectará aquí -->
+        <router-view></router-view>
+      </div>
+    </section>
   </div>
 </template>
 

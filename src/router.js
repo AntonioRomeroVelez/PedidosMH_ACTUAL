@@ -1,16 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 // Importar las vistas o componentes que se navegarán
-import IndexProductos from './components/IndexProductos.vue';
+// import IndexProductos from './components/IndexProductos.vue';
 import ProductosList from './components/ProductosList.vue';
 import ProductosAgregados from './components/ProductosAgregados.vue';
 
 const routes = [
-   {
-      path: '/IndexProductos',
-      name: 'home',
-      component: IndexProductos, // Componente que muestra la lista de productos
-   },
+   // {
+   //    path: '/IndexProductos',
+   //    name: 'home',
+   //    component: IndexProductos, // Componente que muestra la lista de productos
+   // },
    {
       path: '/ProductosList',
       name: 'Productos',
