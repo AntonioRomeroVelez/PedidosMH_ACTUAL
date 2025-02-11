@@ -1,13 +1,14 @@
 <template>
-  <div id="app" class="container is-fullwidth">
+  <div id="app" class="container">
     <!-- Agregar un enlace de navegación -->
 
     <nav
       class="navbar is-fixed-top"
       role="navigation"
       aria-label="main navigation"
+      style="margin-bottom: 10px"
     >
-      <div class="container">
+      <div>
         <router-link to="/ProductosList" class="button is-info mr-5">
           Mostrar Productos
         </router-link>
@@ -17,12 +18,9 @@
         </router-link>
       </div>
     </nav>
-    <section class="section">
-      <div class="container">
-        <!-- El contenido del componente se inyectará aquí -->
-        <router-view></router-view>
-      </div>
-    </section>
+
+    <!-- El contenido del componente se inyectará aquí -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -44,5 +42,12 @@ router-link {
 
 router-link:hover {
   text-decoration: underline;
+}
+
+@media screen and (max-width: 768px), print {
+  .button.is-fullwidth-mobile {
+    display: flex;
+    width: 100%;
+  }
 }
 </style>

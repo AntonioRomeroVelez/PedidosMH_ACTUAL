@@ -1,5 +1,5 @@
 <template>
-  <div v-if="producto" class="container">
+  <div v-if="producto" class="container1">
     <!-- Mostrar los detalles del producto -->
     <strong>Nombre: </strong>
     <b class="has-text-link">{{ producto.NombreProducto }} </b> <br />
@@ -83,18 +83,18 @@ const precioConIVA = computed(() => {
 <style scoped>
 /* Estilos opcionales para el componente hijo */
 
-.container {
+.container1 {
   border: solid 1px silver;
-  display: inline-table;
+  margin: 10px 0px;
   width: 100%;
-  margin: 10px;
+  display: inline-table;
   padding: 5px;
   border-radius: 5px;
 }
 
 .cantidad {
   border: solid 1px silver;
-  width: 80px;
+  width: 100px;
   border-radius: 5px;
   text-align: center;
   outline: none;

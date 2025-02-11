@@ -1,9 +1,9 @@
 <template>
-  <div class="contiainer is-fullwidth">
+  <div class="contiainer">
     <h1>Lista de Productos</h1>
 
     <!-- Input para buscar productos por nombre -->
-    <div>
+    <div style="margin-top: 0px">
       <input
         v-model="searchTerm"
         type="text"
