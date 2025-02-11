@@ -85,7 +85,7 @@ const precioConIVA = computed(() => {
 
 .container1 {
   border: solid 1px silver;
-  margin: 10px 0px;
+  margin: 5px 0px;
   width: 100%;
   display: inline-table;
   padding: 5px;

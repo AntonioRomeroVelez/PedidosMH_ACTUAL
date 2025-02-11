@@ -6,9 +6,8 @@
       class="navbar is-fixed-top"
       role="navigation"
       aria-label="main navigation"
-      style="margin-bottom: 10px"
     >
-      <div>
+      <div style="padding: 5px">
         <router-link to="/ProductosList" class="button is-info mr-5">
           Mostrar Productos
         </router-link>
@@ -18,9 +17,8 @@
         </router-link>
       </div>
     </nav>
-
     <!-- El contenido del componente se inyectará aquí -->
-    <router-view></router-view>
+    <router-view style="margin-top: 30px"></router-view>
   </div>
 </template>
 

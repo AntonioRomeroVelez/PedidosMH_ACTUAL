@@ -64,12 +64,14 @@ const agregarProductoPadre = (cantidad, producto) => {
   if (index !== -1) {
     // Si el producto ya existe, solo actualizar la cantidad
     productosAgregados.value[index].cantidad = cantidad;
+    searchTerm.value = "";
     console.log(
       `Producto ya agregado. Nueva cantidad del producto: ${producto.NombreProducto} es ${productosAgregados.value[index].cantidad}`
     );
   } else {
     // Si el producto no está, agregarlo con la cantidad inicial
     productosAgregados.value.push({ ...producto, cantidad });
+    searchTerm.value = "";
     console.log(
       `Producto agregado: ${producto.NombreProducto}, cantidad de ${cantidad} unidades.`
     );

@@ -27,11 +27,11 @@
         />
       </div>
     </div>
-    <div style="display: flex; gap: 10px">
+    <div style="display: flex; gap: 10px; flex-wrap: wrap">
       <!-- Botones para exportar en diferentes formatos -->
-      <button @click="exportarAExcel" class="button is-info is-light">
+      <!-- <button @click="exportarAExcel" class="button is-info is-light">
         Exportar a Excel
-      </button>
+      </button> -->
       <button
         @click="exportarProformaAExcel"
         class="button is-warning is-light"
