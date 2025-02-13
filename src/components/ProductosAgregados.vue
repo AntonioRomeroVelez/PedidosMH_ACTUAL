@@ -4,27 +4,15 @@
     <div style="display: flex; margin: 15px; gap: 10px; flex-wrap: wrap">
       <div>
         <label>Institución: </label><br />
-        <input
-          v-model="nombreInstitucion"
-          class="input is-primary"
-          style="width: 200px"
-        />
+        <input v-model="nombreInstitucion" class="input is-primary" style="width: 200px" />
       </div>
       <div>
         <label>Vendedor: </label><br />
-        <input
-          v-model="nombreVendedor"
-          class="input is-primary"
-          style="width: 200px"
-        />
+        <input v-model="nombreVendedor" class="input is-primary" style="width: 200px" />
       </div>
       <div>
         <label>Sector: </label><br />
-        <input
-          v-model="nombreSector"
-          class="input is-primary"
-          style="width: 200px"
-        />
+        <input v-model="nombreSector" class="input is-primary" style="width: 200px" />
       </div>
     </div>
     <div style="display: flex; gap: 10px; flex-wrap: wrap">
@@ -32,10 +20,7 @@
       <!-- <button @click="exportarAExcel" class="button is-info is-light">
         Exportar a Excel
       </button> -->
-      <button
-        @click="exportarProformaAExcel"
-        class="button is-warning is-light"
-      >
+      <button @click="exportarProformaAExcel" class="button is-warning is-light">
         Exportar como Proforma
       </button>
       <button @click="exportarPedidoAExcel" class="button is-success is-light">
@@ -49,11 +34,7 @@
     </div>
 
     <!-- Mostrar la tabla con los productos agregados -->
-    <table
-      v-else
-      ref="productosTable"
-      class="table table-striped-columns is-fullwidth"
-    >
+    <table v-else ref="productosTable" class="table table-striped-columns is-fullwidth">
       <thead>
         <tr>
           <th style="font-size: 10px">Acción</th>
@@ -69,16 +50,14 @@
           <th style="font-size: 10px">Descuento</th>
           <th style="font-size: 10px">PVP</th>
           <th style="font-size: 10px">Promoción</th>
+          <th>Total Producto</th> <!-- Nueva columna -->
         </tr>
       </thead>
       <tbody>
         <!-- Iteración a través de los productosAgregados -->
         <tr v-for="producto in productosAgregados" :key="producto.ID">
           <td>
-            <button
-              @click="eliminarProducto(producto.ID)"
-              class="button is-danger"
-            >
+            <button @click="eliminarProducto(producto.ID)" class="button is-danger">
               X
             </button>
           </td>
@@ -93,6 +72,14 @@
           <td style="font-size: 12px">{{ producto.Descuento }}</td>
           <td style="font-size: 12px">{{ producto.PVP || "N/A" }}</td>
           <td style="font-size: 12px">{{ producto.Promocion || "N/A" }}</td>
+          <td>
+            <!-- Cálculo del total por producto -->
+            ${{ (producto.cantidad * producto.PrecioFarmacia).toFixed(2) }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="10" style="text-align: right; font-weight: bold;">Precio Total:</td>
+          <td style="font-weight: bold;">${{ precioTotal }}</td>
         </tr>
       </tbody>
     </table>
@@ -101,7 +88,7 @@
 
 <script setup>
 // Importar las librerías necesarias
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import ExcelJS from "exceljs";
 
 const nombreInstitucion = ref("");
@@ -235,19 +222,42 @@ const exportarProformaAExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Proforma");
 
+    // // Agregar filas con la información de institución, vendedor y sector
+    // worksheet.addRow(["Institución:", nombreInstitucion.value]);
+    // worksheet.addRow(["Vendedor:", nombreVendedor.value]);
+    // worksheet.addRow(["Sector:", nombreSector.value]);
+    // worksheet.addRow([]); // Fila vacía para separar la información de la tabla
+
+
     // Agregar filas con la información de institución, vendedor y sector
-    worksheet.addRow(["Institución:", nombreInstitucion.value]);
-    worksheet.addRow(["Vendedor:", nombreVendedor.value]);
-    worksheet.addRow(["Sector:", nombreSector.value]);
+    const institucionRow = worksheet.addRow([`Institución:  ${nombreInstitucion.value}`]);
+    const vendedorRow = worksheet.addRow([`Vendedor:  ${nombreVendedor.value}`]);
+    const sectorRow = worksheet.addRow([`Sector:  ${nombreSector.value}`]);
     worksheet.addRow([]); // Fila vacía para separar la información de la tabla
+
+    // Unir celdas para cada fila de información (Columnas A y B)
+    worksheet.mergeCells(`A${institucionRow.number}: B${institucionRow.number}`);
+    worksheet.mergeCells(`A${vendedorRow.number}: B${vendedorRow.number}`);
+    worksheet.mergeCells(`A${sectorRow.number}: B${sectorRow.number}`);
+
+    // Aplicar estilos opcionales
+    [institucionRow, vendedorRow, sectorRow].forEach(row => {
+      row.eachCell((cell) => {
+        cell.font = { bold: true };
+        cell.alignment = { vertical: "middle", horizontal: "left" };
+      });
+    });
+
 
     // Agregar encabezados en la fila 5
     const headerRow = worksheet.addRow([
+      "Cantidad",
       "Nombre",
       "Precio Farmacia",
       "Promoción",
       "MARCA",
       "Presentación",
+      "Precio total",
     ]);
 
     // Aplicar estilos a los encabezados
@@ -273,21 +283,25 @@ const exportarProformaAExcel = async () => {
 
     // Ajustar el ancho de las columnas
     worksheet.columns = [
+      { key: "cantidad", width: 10 },
       { key: "nombre", width: 30 },
       { key: "precioFarmacia", width: 15 },
       { key: "promocion", width: 20 },
       { key: "MARCA", width: 20 },
       { key: "presentacion", width: 20 },
+      { key: "totalPrecioProducto", width: 20 },
     ];
 
     // Llenar los datos a partir de la fila 6
     productosAgregados.value.forEach((producto) => {
       const row = worksheet.addRow({
+        cantidad: producto.cantidad,
         nombre: producto.NombreProducto,
-        precioFarmacia: producto.PrecioFarmacia.toFixed(2),
+        precioFarmacia: "$ " + producto.PrecioFarmacia.toFixed(2),
         promocion: producto.Promocion || "",
         MARCA: producto.MARCA || "___",
         presentacion: producto.Presentacion,
+        totalPrecioProducto: "$ " + (producto.cantidad * producto.PrecioFarmacia).toFixed(2),
       });
 
       // Ajustar la altura de la fila dinámicamente
@@ -309,6 +323,34 @@ const exportarProformaAExcel = async () => {
       });
     });
 
+
+    // Agregar una fila al final con el precio total
+    const totalRow = worksheet.addRow([
+      "", "", "", "", "", "Total", "$ " + precioTotal.value
+    ]);
+
+    // Aplicar formato al total
+    totalRow.eachCell((cell, colIndex) => {
+      if (colIndex === 7) { // La columna del precio total
+        cell.font = { bold: true, color: { argb: "FFFFFF" } };
+        cell.alignment = { vertical: "middle", horizontal: "center" };
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "4F81BD" }, // Azul
+        };
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
+        };
+      }
+    });
+
+
+
+
     // Generar archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/octet-stream" });
@@ -322,19 +364,43 @@ const exportarProformaAExcel = async () => {
   }
 };
 
+
+// Computed para calcular el precio total basado en PrecioFarmacia
+const precioTotal = computed(() => {
+  return productosAgregados.value.reduce((total, producto) => {
+    const cantidad = producto.cantidad || 0;
+    const precioFarmacia = parseFloat(producto.PrecioFarmacia) || 0; // Convertir PrecioFarmacia a número
+    return total + cantidad * precioFarmacia;
+  }, 0).toFixed(2); // Redondear a 2 decimales
+});
+
 const exportarPedidoAExcel = async () => {
   try {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Pedido");
 
-    // Agregar información general
-    worksheet.addRow(["Institución:", nombreInstitucion.value]);
-    worksheet.addRow(["Vendedor:", nombreVendedor.value]);
-    worksheet.addRow(["Sector:", nombreSector.value]);
-    worksheet.addRow([]); // Fila vacía para separar la información
+    // Agregar filas con la información de institución, vendedor y sector
+    const institucionRow = worksheet.addRow([`Institución: ${nombreInstitucion.value}`]);
+    const vendedorRow = worksheet.addRow([`Vendedor: ${nombreVendedor.value}`]);
+    const sectorRow = worksheet.addRow([`Sector: ${nombreSector.value}`]);
+    worksheet.addRow([]); // Fila vacía para separar la información de la tabla
+
+    // Unir celdas para cada fila de información (Columnas A y B)
+    worksheet.mergeCells(`A${institucionRow.number}: B${institucionRow.number}`);
+    worksheet.mergeCells(`A${vendedorRow.number}: B${vendedorRow.number}`);
+    worksheet.mergeCells(`A${sectorRow.number}: B${sectorRow.number}`);
+
+    // Aplicar estilos opcionales
+    [institucionRow, vendedorRow, sectorRow].forEach(row => {
+      row.eachCell((cell) => {
+        cell.font = { bold: true };
+        cell.alignment = { vertical: "middle", horizontal: "left" };
+      });
+    });
 
     // Definir los encabezados en la fila 5
     const headerRow = worksheet.addRow([
+      "Cantidad",
       "Nombre",
       "Precio Farmacia",
       "Promoción",
@@ -367,6 +433,7 @@ const exportarPedidoAExcel = async () => {
 
     // Ajustar el ancho de las columnas
     worksheet.columns = [
+      { key: "cantidad", width: 10 },
       { key: "nombre", width: 30 },
       { key: "precioFarmacia", width: 15 },
       { key: "promocion", width: 20 },
@@ -379,8 +446,9 @@ const exportarPedidoAExcel = async () => {
     // Llenar los datos a partir de la fila 6
     productosAgregados.value.forEach((producto) => {
       const row = worksheet.addRow({
+        cantidad: producto.cantidad,
         nombre: producto.NombreProducto,
-        precioFarmacia: producto.PrecioFarmacia.toFixed(2),
+        precioFarmacia: "$ " + producto.PrecioFarmacia.toFixed(2),
         promocion: producto.Promocion || "",
         MARCA: producto.MARCA || "___",
         presentacion: producto.Presentacion,
@@ -406,6 +474,8 @@ const exportarPedidoAExcel = async () => {
         };
       });
     });
+
+
 
     // Generar archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();

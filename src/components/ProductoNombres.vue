@@ -7,8 +7,7 @@
     <strong>Principio activo: </strong> {{ producto.PrincipioActivo }} <br />
     <strong>Promoción: </strong>
     <span v-if="producto.Promocion" class="text-primary">
-      {{ producto.Promocion }}</span
-    >
+      {{ producto.Promocion }}</span>
     <span v-else class="text-warning"> No tiene promoción</span> &emsp;
 
     <strong>P. Farmacia: </strong> ${{ producto.PrecioFarmacia }} &emsp;
@@ -26,11 +25,9 @@
       {{ producto.IVA }}
     </span>
 
-    <div
-      style="display: flex; gap: 5px; justify-content: center; margin: 10px 3px"
-    >
+    <div style="display: flex; gap: 5px; justify-content: start; margin: 10px 3px">
       <strong>Cantidad:</strong>
-      <input v-model="cantidad" type="number" min="1" class="input is-info" />
+      <input v-model="cantidad" type="number" min="1" class="input is-info" style="width:100px" />
 
       <!-- Botón para agregar al carrito -->
       <div class="text-center">
