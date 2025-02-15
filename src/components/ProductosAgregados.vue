@@ -73,7 +73,8 @@
           <td style="font-size: 12px">{{ producto.PVP || "N/A" }}</td>
           <td style="font-size: 12px">{{ producto.Promocion || "N/A" }}</td>
           <td>
-            ${{ (producto.cantidad * parseFloat(producto.PrecioFarmacia.replace(',', '.'))).toFixed(2) }}
+
+            ${{ (producto.cantidad * parseFloat(String(producto.PrecioFarmacia).replace(',', '.'))).toFixed(2) }}
           </td>
 
         </tr>
@@ -297,11 +298,11 @@ const exportarProformaAExcel = async () => {
       const row = worksheet.addRow({
         cantidad: producto.cantidad,
         nombre: producto.NombreProducto,
-        precioFarmacia: "$ " + producto.PrecioFarmacia.toFixed(2),
+        precioFarmacia: "$ " + parseFloat(String(producto.PrecioFarmacia).replace(',', '.')).toFixed(2),
         promocion: producto.Promocion || "",
-        MARCA: producto.MARCA || "___",
+        MARCA: producto.MARCA || "   ",
         presentacion: producto.Presentacion,
-        totalPrecioProducto: "$ " + (producto.cantidad * producto.PrecioFarmacia).toFixed(2),
+        totalPrecioProducto: "$ " + (producto.cantidad * parseFloat(String(producto.PrecioFarmacia).replace(',', '.'))).toFixed(2),
       });
 
       // Ajustar la altura de la fila dinámicamente
@@ -448,9 +449,10 @@ const exportarPedidoAExcel = async () => {
       const row = worksheet.addRow({
         cantidad: producto.cantidad,
         nombre: producto.NombreProducto,
-        precioFarmacia: "$ " + producto.PrecioFarmacia.toFixed(2),
+
+        precioFarmacia: "$ " + parseFloat(String(producto.PrecioFarmacia).replace(',', '.')).toFixed(2),
         promocion: producto.Promocion || "",
-        MARCA: producto.MARCA || "___",
+        MARCA: producto.MARCA || "",
         presentacion: producto.Presentacion,
         lote: "", // Campo vacío pero con borde
         fecha_de_vencimiento: "", // Campo vacío pero con borde

@@ -30,7 +30,7 @@ const searchTerm = ref(""); // Término de búsqueda
 // Cargar productos desde el archivo JSON
 onMounted(async () => {
   try {
-    const response = await fetch("/productosLista_14_02_2025.json"); // Quita "/public/"
+    const response = await fetch("/datos.json"); // Quita "/public/"
     if (!response.ok) throw new Error("Error al cargar los productos");
 
     productos.value = await response.json();
