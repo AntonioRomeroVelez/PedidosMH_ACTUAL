@@ -1,16 +1,11 @@
 <template>
   <div class="contiainer">
-    <h1>Lista de Productos</h1>
 
     <!-- Input para buscar productos por nombre -->
-    <div style="margin-top: 0px">
-      <input
-        v-model="searchTerm"
-        type="text"
-        placeholder="Buscar producto..."
-        class="input is-primary"
-      />
+    <div style="margin-top:-10px;position:fixed;background-color:white;z-index:10;">
+      <input v-model="searchTerm" type="text" placeholder="Buscar producto..." class="input is-primary" />
     </div>
+    <div style="margin-top: 65px;">asasas</div>
 
     <!-- Verificar si hay productos disponibles para mostrar -->
     <div v-if="filteredProductos.length === 0">
@@ -18,12 +13,8 @@
     </div>
 
     <!-- Mostrar productos con el componente hijo ProductoNombres -->
-    <ProductoNombres
-      v-for="producto in filteredProductos"
-      :key="producto.ID"
-      :producto="producto"
-      @agregarProductoHijo="agregarProductoPadre"
-    />
+    <ProductoNombres v-for="producto in filteredProductos" :key="producto.ID" :producto="producto"
+      @agregarProductoHijo="agregarProductoPadre" />
   </div>
 </template>
 
@@ -39,7 +30,7 @@ const searchTerm = ref(""); // Término de búsqueda
 // Cargar productos desde el archivo JSON
 onMounted(async () => {
   try {
-    const response = await fetch("/listaGeneral.json"); // Quita "/public/"
+    const response = await fetch("/productosLista_14_02_2025.json"); // Quita "/public/"
     if (!response.ok) throw new Error("Error al cargar los productos");
 
     productos.value = await response.json();

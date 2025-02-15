@@ -2,11 +2,7 @@
   <div id="app" class="container">
     <!-- Agregar un enlace de navegación -->
 
-    <nav
-      class="navbar is-fixed-top"
-      role="navigation"
-      aria-label="main navigation"
-    >
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
       <div style="padding: 5px">
         <router-link to="/ProductosList" class="button is-info mr-5">
           Mostrar Productos
@@ -15,6 +11,7 @@
         <router-link to="/ProductosAgregados" class="button is-warning mr-5">
           Mostrar Pedido
         </router-link>
+
       </div>
     </nav>
     <!-- El contenido del componente se inyectará aquí -->
@@ -42,7 +39,8 @@ router-link:hover {
   text-decoration: underline;
 }
 
-@media screen and (max-width: 768px), print {
+@media screen and (max-width: 768px),
+print {
   .button.is-fullwidth-mobile {
     display: flex;
     width: 100%;

@@ -66,16 +66,16 @@
           <td style="font-size: 12px">{{ producto.PrincipioActivo }}</td>
           <td style="font-size: 12px">{{ producto.Presentacion }}</td>
           <td style="font-size: 12px">
-            ${{ producto.PrecioFarmacia.toFixed(2) }}
+            ${{ producto.PrecioFarmacia }}
           </td>
           <td style="font-size: 12px">{{ producto.MARCA }}</td>
           <td style="font-size: 12px">{{ producto.Descuento }}</td>
           <td style="font-size: 12px">{{ producto.PVP || "N/A" }}</td>
           <td style="font-size: 12px">{{ producto.Promocion || "N/A" }}</td>
           <td>
-            <!-- Cálculo del total por producto -->
-            ${{ (producto.cantidad * producto.PrecioFarmacia).toFixed(2) }}
+            ${{ (producto.cantidad * parseFloat(producto.PrecioFarmacia.replace(',', '.'))).toFixed(2) }}
           </td>
+
         </tr>
         <tr>
           <td colspan="10" style="text-align: right; font-weight: bold;">Precio Total:</td>
